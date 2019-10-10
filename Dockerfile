@@ -5,9 +5,14 @@ RUN apk add --no-cache \
     git zip unzip curl \
     libpng-dev bzip2-dev icu-dev mariadb-client && \
     # Install PHP dependencies
-    docker-php-ext-install pdo_mysql gd bz2 intl pcntl && \
+    docker-php-ext-install pdo_mysql gd bz2 intl pcntl
+
+RUN apk add --no-cache $PHPIZE_DEPS && \
+    pecl install redis && \
+    docker-php-ext-enable redis
+
     # Prepare composer for use
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     # Prepare the source directory for SeAT
     mkdir -p /usr/src && cd /usr/src && \
     # And install SeAT
